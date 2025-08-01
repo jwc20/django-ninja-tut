@@ -69,8 +69,10 @@ class EmployeeOut(Schema):
 def create_employee(request, payload: EmployeeIn, cv: File[UploadedFile] = None):
     payload_dict = payload.dict()
     employee = Employee(**payload_dict)
-    employee.cv.save(cv.name, cv)
-    return {"id": employee.id}
+    if cv:
+        employee.cv.save(cv.name, cv)    
+    employee.save()
+    return {"success": True}
 
 
 # handle file upload
